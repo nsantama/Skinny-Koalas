@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 
 a = True
 nCam = 1
@@ -15,27 +16,37 @@ robot_angle = 0
 color1_hsv = np.array([0, 0, 0])
 color2_hsv = np.array([0, 0, 0])
 color3_hsv = np.array([0, 0, 0])
+color4_hsv = np.array([0, 0, 0])
+color5_hsv = np.array([0, 0, 0])
 obj = (0,0)
 
 
 def write_colors():
     global color1_hsv, color2_hsv, color3_hsv
-    with open('color1.npy', 'wb') as color:
+    with open(os.path.join("colors", 'color1.npy'), 'wb') as color:
         np.save(color, color1_hsv)
-    with open('color2.npy', 'wb') as color:
+    with open(os.path.join("colors", 'color2.npy'), 'wb') as color:
         np.save(color, color2_hsv)
-    with open('color3.npy', 'wb') as color:
+    with open(os.path.join("colors", 'color3.npy'), 'wb') as color:
         np.save(color, color3_hsv)
+    with open(os.path.join("colors", 'color4.npy'), 'wb') as color:
+        np.save(color, color4_hsv)
+    with open(os.path.join("colors", 'color5.npy'), 'wb') as color:
+        np.save(color, color5_hsv)
 
 
 def read_colors():
     global color1_hsv, color2_hsv, color3_hsv
-    with open('color1.npy', 'rb') as color:
+    with open(os.path.join("colors", 'color1.npy'), 'rb') as color:
         color1_hsv = np.load(color)
-    with open('color2.npy', 'rb') as color:
+    with open(os.path.join("colors", 'color2.npy'), 'rb') as color:
         color2_hsv = np.load(color)
-    with open('color3.npy', 'rb') as color:
+    with open(os.path.join("colors", 'color3.npy'), 'rb') as color:
         color3_hsv = np.load(color)
+    with open(os.path.join("colors", 'color4.npy'), 'rb') as color:
+        color4_hsv = np.load(color)
+    with open(os.path.join("colors", 'color5.npy'), 'rb') as color:
+        color5_hsv = np.load(color)
 
 
 def _mouseEvent(event, x, y, flags, param):
@@ -58,11 +69,24 @@ def _mouseEvent(event, x, y, flags, param):
             print(f"Color 3: {color3_hsv}  |  Posicion: {[x, y]}")
             obj = (x, y)
             nClick += 1
+        elif nClick == 4:
+            color4_hsv = hsv_frame[y, x]
+            print(f"Color 4: {color4_hsv}  |  Posicion: {[x, y]}")
+            obj = (x, y)
+            nClick += 1
+        elif nClick == 5:
+            color5_hsv = hsv_frame[y, x]
+            print(f"Color 5: {color5_hsv}  |  Posicion: {[x, y]}")
+            obj = (x, y)
+            nClick += 1
             write_colors()
         else:
             color1_hsv = np.array([0, 0, 0])
             color2_hsv = np.array([0, 0, 0])
             color3_hsv = np.array([0, 0, 0])
+            color4_hsv = np.array([0, 0, 0])
+            color5_hsv = np.array([0, 0, 0])
+            color6_hsv = np.array([0, 0, 0])
             print("Colores reiniciados")
             nClick = 1
 
@@ -87,16 +111,23 @@ def get_mass_center(mask):
         return None
 
 
-def draw_centers(img, mass_center1, mass_center2, mass_center3, obj):
+def draw_centers(img, mass_center1, mass_center2, mass_center3, mass_center4, mass_center5,
+                 obj):
     color_mc1 = (255, 0, 0)
     color_mc2 = (0, 0, 255)
     color_mc3 = (0, 255, 0)
+    color_mc4 = (0, 255, 255)
+    color_mc5 = (255, 255, 0)
     if mass_center1 is not None:
         cv2.circle(img, mass_center1, 10, color_mc1, -1)
     if mass_center2 is not None:
         cv2.circle(img, mass_center2, 10, color_mc2, -1)
     if mass_center3 is not None:
         cv2.circle(img, mass_center3, 10, color_mc3, -1)
+    if mass_center4 is not None:
+        cv2.circle(img, mass_center4, 10, color_mc4, -1)
+    if mass_center5 is not None:
+        cv2.circle(img, mass_center5, 10, color_mc5, -1)
     if obj is not None:
         cv2.circle(img, obj, 10, (255, 255, 0), -1)
 
@@ -118,14 +149,20 @@ def camerarun():
         Color1Mask = get_mask(hsv, color1_hsv, LowerColorError, UpperColorError)
         Color2Mask = get_mask(hsv, color2_hsv, LowerColorError, UpperColorError)
         Color3Mask = get_mask(hsv, color3_hsv, LowerColorError, UpperColorError)
+        Color4Mask = get_mask(hsv, color4_hsv, LowerColorError, UpperColorError)
+        Color5Mask = get_mask(hsv, color5_hsv, LowerColorError, UpperColorError)
         Color1Res = cv2.bitwise_and(frame, frame, mask=Color1Mask)
         Color2Res = cv2.bitwise_and(frame, frame, mask=Color2Mask)
         Color3Res = cv2.bitwise_and(frame, frame, mask=Color3Mask)
-        res = Color1Res + Color2Res + Color3Res
+        Color4Res = cv2.bitwise_and(frame, frame, mask=Color4Mask)
+        Color5Res = cv2.bitwise_and(frame, frame, mask=Color5Mask)
+        res = Color1Res + Color2Res + Color3Res + Color4Res + Color5Res
         center1 = get_mass_center(Color1Mask)  # Front
         center2 = get_mass_center(Color2Mask)  # Back
         center3 = get_mass_center(Color3Mask)  # Ball
-        draw_centers(res, center1, center2, center3, obj)
+        center4 = get_mass_center(Color4Mask)  # Front Enemy
+        center5 = get_mass_center(Color5Mask)  # Back Enemy
+        draw_centers(res, center1, center2, center3, center4, center5, obj)
 
         if center1 is not None and center2 is not None:
             cv2.line(res, center1, center2, (255, 255, 255), 2)
@@ -142,7 +179,16 @@ def camerarun():
                 ball_delta = center3 - robot_center
                 ball_angle = np.arctan2(ball_delta[1], ball_delta[0]) - robot_angle
                 cv2.putText(res, f"Ball: [{round(ball_dist)}, {round(np.rad2deg(ball_angle), 1)}]",
-                            (0, 75), text_font, text_scale, text_color, text_thick)
+                            (0, 100), text_font, text_scale, text_color, text_thick)
+            
+            if center4 is not None and center5 is not None:
+                cv2.line(res, center4, center5, (255, 255, 255), 2)
+                enemy_center = np.array((0.5 * (center4 + center5)).astype(int))
+                enemy_delta = center4 - center5
+                enemy_angle = np.arctan2(enemy_delta[1], enemy_delta[0])
+                cv2.circle(res, enemy_center, 10, (255, 255, 255), 1)
+                cv2.putText(res,  f"Enemy: [{enemy_center[0]}, {enemy_center[1]}, {round(np.rad2deg(enemy_angle), 1)}]",
+                            (0, 50), text_font, text_scale, text_color, text_thick)
 
         cv2.imshow('frame', frame)
         cv2.imshow('res', res)

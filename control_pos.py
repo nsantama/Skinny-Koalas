@@ -50,7 +50,7 @@ class ControlPos:
         k0_ang, k1_ang, k2_ang = self.get_coef(Ts, self.Kp_ang, self.Ki_ang, self.Kd_ang)
         self.control_dist_ = self.control_dist
         self.control_and_ = self.control_and
-        self.control_dist = self.control_dist_ + k0_dist*self.error_dist + k1_dist*self.error_dist_ + k2_dist*self.error_dist__
+        self.control_dist = self.control_dist_ + *self.error_dist + k1_dist*self.error_dist_ + k2_dist*self.error_dist__
         self.control_and = self.control_and_ + k0_ang*self.error_ang + k1_ang*self.error_ang_ + k2_ang*self.error_ang__
         self.control_dist = max(self.control_dist_min, self.control_dist)
         self.control_dist = min(self.control_dist, self.control_dist_max)
