@@ -1,16 +1,11 @@
 import cv2
 import numpy as np
 import os
+import parameters as p
 
 a = True
-nCam = 1
-LowerColorError = np.array([-10, -35, -35])
-UpperColorError = np.array([10, 35, 35])
+
 gaussian_ksize = (51, 51)
-text_font = cv2.FONT_HERSHEY_SIMPLEX
-text_scale = 0.5
-text_color = (255, 255, 255)
-text_thick = 2
 robot_center = np.array((0, 0))
 robot_angle = 0
 color1_hsv = np.array([0, 0, 0])
@@ -86,7 +81,6 @@ def _mouseEvent(event, x, y, flags, param):
             color3_hsv = np.array([0, 0, 0])
             color4_hsv = np.array([0, 0, 0])
             color5_hsv = np.array([0, 0, 0])
-            color6_hsv = np.array([0, 0, 0])
             print("Colores reiniciados")
             nClick = 1
 
@@ -133,9 +127,9 @@ def draw_centers(img, mass_center1, mass_center2, mass_center3, mass_center4, ma
 
 
 def camerarun():
-    global nClick, color1_hsv, color2_hsv, color3_hsv, nCam, LowerColorError, UpperColorError, a, \
-        gaussian_ksize, text_font, text_scale, text_color, text_thick, frame, robot_center, robot_angle, center3
-    cap = cv2.VideoCapture(nCam)
+    global nClick, color1_hsv, color2_hsv, color3_hsv, a, \
+        gaussian_ksize, frame, robot_center, robot_angle, center3
+    cap = cv2.VideoCapture(p.nCam)
     nClick = 1
     cv2.namedWindow('frame', cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow('frame', 30, 100)
@@ -146,11 +140,11 @@ def camerarun():
     while True:
         ret, frame = cap.read()
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        Color1Mask = get_mask(hsv, color1_hsv, LowerColorError, UpperColorError)
-        Color2Mask = get_mask(hsv, color2_hsv, LowerColorError, UpperColorError)
-        Color3Mask = get_mask(hsv, color3_hsv, LowerColorError, UpperColorError)
-        Color4Mask = get_mask(hsv, color4_hsv, LowerColorError, UpperColorError)
-        Color5Mask = get_mask(hsv, color5_hsv, LowerColorError, UpperColorError)
+        Color1Mask = get_mask(hsv, color1_hsv, p.LOWER_COLOR_ERROR, p.UPPER_COLOR_ERROR)
+        Color2Mask = get_mask(hsv, color2_hsv, p.LOWER_COLOR_ERROR, p.UPPER_COLOR_ERROR)
+        Color3Mask = get_mask(hsv, color3_hsv, p.LOWER_COLOR_ERROR, p.UPPER_COLOR_ERROR)
+        Color4Mask = get_mask(hsv, color4_hsv, p.LOWER_COLOR_ERROR, p.UPPER_COLOR_ERROR)
+        Color5Mask = get_mask(hsv, color5_hsv, p.LOWER_COLOR_ERROR, p.UPPER_COLOR_ERROR)
         Color1Res = cv2.bitwise_and(frame, frame, mask=Color1Mask)
         Color2Res = cv2.bitwise_and(frame, frame, mask=Color2Mask)
         Color3Res = cv2.bitwise_and(frame, frame, mask=Color3Mask)
@@ -171,7 +165,7 @@ def camerarun():
             robot_angle = np.arctan2(robot_delta[1], robot_delta[0])
             cv2.circle(res, robot_center, 10, (255, 255, 255), 1)
             cv2.putText(res,  f"Robot: [{robot_center[0]}, {robot_center[1]}, {round(np.rad2deg(robot_angle), 1)}]",
-                        (0, 25), text_font, text_scale, text_color, text_thick)
+                        (0, 25), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
 
             if center3 is not None:
                 cv2.line(res, robot_center, center3, (255, 255, 255), 2)
@@ -179,7 +173,7 @@ def camerarun():
                 ball_delta = center3 - robot_center
                 ball_angle = np.arctan2(ball_delta[1], ball_delta[0]) - robot_angle
                 cv2.putText(res, f"Ball: [{round(ball_dist)}, {round(np.rad2deg(ball_angle), 1)}]",
-                            (0, 100), text_font, text_scale, text_color, text_thick)
+                            (0, 100), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
             
             if center4 is not None and center5 is not None:
                 cv2.line(res, center4, center5, (255, 255, 255), 2)
@@ -188,7 +182,7 @@ def camerarun():
                 enemy_angle = np.arctan2(enemy_delta[1], enemy_delta[0])
                 cv2.circle(res, enemy_center, 10, (255, 255, 255), 1)
                 cv2.putText(res,  f"Enemy: [{enemy_center[0]}, {enemy_center[1]}, {round(np.rad2deg(enemy_angle), 1)}]",
-                            (0, 50), text_font, text_scale, text_color, text_thick)
+                            (0, 50), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
 
         cv2.imshow('frame', frame)
         cv2.imshow('res', res)

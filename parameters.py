@@ -1,3 +1,6 @@
+import numpy as np
+import cv2
+
 ##### Parámetros #####
 
 # Datos del robot
@@ -16,3 +19,16 @@ MARGEN_D_ARCO = "" # distancia de margen en la que el robot se posicionará para
 
 # Proporciones de tamaño respecto al ancho del robot
 ANCHO_ENEMIGO_P = ""
+
+
+# Camara
+a = True
+nCam = 1
+LOWER_COLOR_ERROR = np.array([-10, -35, -35])
+UPPER_COLOR_ERROR = np.array([10, 35, 35])
+
+TEXT_FONT = cv2.FONT_HERSHEY_SIMPLEX
+TEXT_SCALE = 0.5
+TEXT_COLOR = (255, 255, 255)
+TEXT_THICK = 2
+gaussian_ksize = (51, 51)
