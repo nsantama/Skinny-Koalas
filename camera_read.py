@@ -152,14 +152,14 @@ class Brain:
         self.controltr.start()
 
     def send_info(self):
-        ser = serial.Serial("COM5", baudrate=38400, timeout=1)
+        ser = serial.Serial(p.SERIAL_PORT, baudrate=38400, timeout=1)
         time.sleep(1)
 
         while True:
             print(f"Enviando {self.msg}")
             msgEncode = str.encode(self.msg)
             ser.write(msgEncode)
-            time.sleep(0.5)
+            time.sleep(0.01)
         # Cerramos el puerto serial abierto una vez terminado el codigo
         ser.close()
 
@@ -208,6 +208,7 @@ if __name__ == '__main__':
 
         #new_pos = function para elegir a donde ir
         new_pos = center3
+        #new_pos = (np.array(frame.shape)[:2]/2).astype(int)
 
         cerebro.set_pos_ref(new_pos)
         
@@ -233,6 +234,7 @@ if __name__ == '__main__':
                 enemy_center = np.array((0.5 * (center4 + center5)).astype(int))
                 enemy_delta = center4 - center5
                 enemy_angle = np.arctan2(enemy_delta[1], enemy_delta[0])
+                angle2enemy = enemy_angle - robot_angle
                 cv2.circle(res, enemy_center, 10, (255, 255, 255), 1)
                 cv2.putText(res,  f"Enemy: [{enemy_center[0]}, {enemy_center[1]}, {round(np.rad2deg(enemy_angle), 1)}]",
                             (0, 50), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)

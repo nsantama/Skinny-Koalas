@@ -3,6 +3,8 @@ import cv2
 
 ##### Parámetros #####
 
+SERIAL_PORT = "COM10"
+
 # Datos del robot
 ALTO = ""
 ANCHO = ""
