@@ -5,6 +5,7 @@ import time
 import serial
 import numpy as np
 
+
 class Brain:
     def __init__(self):
         self.camara = threading.Thread(target=camera.camerarun)
@@ -14,7 +15,7 @@ class Brain:
         self.msg = "0,0"
 
     def control(self):
-        #while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:
+        # while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:
         while (True):
             self.controlpos.error_dist__ = self.controlpos.error_dist_
             self.controlpos.error_dist_ = self.controlpos.error_dist
@@ -22,19 +23,18 @@ class Brain:
             self.controlpos.error_ang__ = self.controlpos.error_ang_
             self.controlpos.error_ang_ = self.controlpos.error_ang
             self.controlpos.error_ang = camera.robot_angle - self.controlpos.angRef
-            x, y =self.controlpos.get_control()
+            x, y = self.controlpos.get_control()
             self.msg = f"{x},{y}"
 
     def start(self):
         self.camara.start()
-        #self.sendinfo.start()
+        # self.sendinfo.start()
         time.sleep(1)
         print("hola")
         self.controltr.start()
 
-
     def send_info(self):
-        ser = serial.Serial("COM5",baudrate = 38400,timeout = 1)
+        ser = serial.Serial("COM5", baudrate=38400, timeout=1)
         time.sleep(1)
 
         while(True):
@@ -49,9 +49,10 @@ class Brain:
         print((np.array(camera.frame.shape)[:2]/2).astype(int))
         self.controlpos.posRef = (np.array(camera.frame.shape)[:2]/2).astype(int)
 
+
 if __name__ == '__main__':
     cerebro = Brain()
     cerebro.start()
     time.sleep(2)
-    cerebro.set_pos_ref((0,0))
+    cerebro.set_pos_ref((0, 0))
     print("fin")
