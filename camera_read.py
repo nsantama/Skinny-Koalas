@@ -3,7 +3,7 @@ import numpy as np
 import os
 import parameters as p
 
-a = True
+running = True
 
 gaussian_ksize = (51, 51)
 robot_center = np.array((0, 0))
@@ -127,7 +127,7 @@ def draw_centers(img, mass_center1, mass_center2, mass_center3, mass_center4, ma
 
 
 def camerarun():
-    global nClick, color1_hsv, color2_hsv, color3_hsv, a, \
+    global nClick, color1_hsv, color2_hsv, color3_hsv, running, \
         gaussian_ksize, frame, robot_center, robot_angle, center3
     cap = cv2.VideoCapture(p.nCam)
     nClick = 1
@@ -174,7 +174,7 @@ def camerarun():
                 ball_angle = np.arctan2(ball_delta[1], ball_delta[0]) - robot_angle
                 cv2.putText(res, f"Ball: [{round(ball_dist)}, {round(np.rad2deg(ball_angle), 1)}]",
                             (0, 100), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
-            
+
             if center4 is not None and center5 is not None:
                 cv2.line(res, center4, center5, (255, 255, 255), 2)
                 enemy_center = np.array((0.5 * (center4 + center5)).astype(int))
@@ -188,7 +188,7 @@ def camerarun():
         cv2.imshow('res', res)
 
         if cv2.waitKey(1) & 0xFF == 27:
-            a = False
+            running = False
             break
 
     cap.release()
