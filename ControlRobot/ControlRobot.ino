@@ -196,7 +196,7 @@ void loop() {
     Serial.println(dt);
     Serial.println("\n");*/
     
-    Serial.println("Velocidades");
+    /*Serial.println("Velocidades");
     Serial.println(vI);
     Serial.println("OutI");
     Serial.println(outI);
@@ -208,7 +208,7 @@ void loop() {
     Serial.println(rD);
     Serial.println("rI");
     Serial.println(rI);
-    Serial.println("\n");
+    Serial.println("\n");*/
   }
 }
 

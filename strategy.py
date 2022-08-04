@@ -1,5 +1,6 @@
 ## Estrategia
 
+<<<<<<< HEAD
 ## Librerías
 from sympy import Point, Line, 
 
@@ -26,6 +27,16 @@ ANCHO_ENEMIGO_P = 4.7
 
 ## Datos
 # Coordenadas centro círculo frente robot
+=======
+##### Librerías #####
+from sympy import Point, Line
+import numpy as np
+import parameters as p
+
+
+##### Datos #####
+# Coordenadas frente robot
+>>>>>>> 351272f5c7c6ce9b85d51312abb55300a033589e
 x_front_r = 0
 y_front_r = 0
 
@@ -49,6 +60,7 @@ y_ball = 0
 x_arco = 0
 y_arco = 0
 
+<<<<<<< HEAD
 # Ángulo calculado en procesamiento de imágenes a pelota
 ang = 0
 
@@ -56,18 +68,24 @@ ang = 0
 ang_e = 0
 
 ## Funciones: Hay que retornar la posición y el ángulo
+=======
+# Ángulo calculado en procesamiento de imágenes (radianes)
+ang_robot = 0  # del robot c/r marco referencia
+ang_ball  # de la pelota c/r a robot
+
+
+##### Funciones: Hay que retornar la posición y el ángulo #####
+
+>>>>>>> 351272f5c7c6ce9b85d51312abb55300a033589e
 # Si el robot debe rotar, se define el ángulo en grados y si será horario y antihorario
-def angulo():
-    if ang > 180 and ang < 270:
-        ang = -1 * (360 - ang)
-    if ang == 270:
-        ang = -90
-    if ang > 270 and ang < 360:
-        ang = -1 * (360 - ang)
-    if ang == 360:
-        ang = 0
+def corregir_angulo(ang):
+    if ang > np.pi:
+        ang = ang - 2*np.pi
+    elif ang < -np.pi:
+        ang = 2*np.pi + ang
     return ang
 
+<<<<<<< HEAD
 
 
 def circulo_goniometrico():
@@ -75,6 +93,8 @@ def circulo_goniometrico():
     pass
 
 
+=======
+>>>>>>> 351272f5c7c6ce9b85d51312abb55300a033589e
 # Define cual es el punto objetivo dependiendo de distintas condiciones
 def set_objetivo():
     if bloqueado() is False:
@@ -85,21 +105,23 @@ def set_objetivo():
 
 # Si el objetivo no esta en la visión del robot, rotar sobre su propio eje hasta que lo encuentre
 def rotar():
-    objetivo = (x_center_r, y_center_r)
-    angulo = angulo()
-    return objetivo, angulo
+    delta_angulo = 0.1  # radianes
+    punto_objetivo = (x_center_r, y_center_r)
+    angulo_objetivo = corregir_angulo(ang_robot + delta_angulo)
+    return punto_objetivo, angulo_objetivo
 
 # Si el objetivo esta en la línea del robot, avanzar derecho
 def avanzar():
-    objetivo = set_objetivo()
-    angulo = 0 # Se define que esta alineado (aunque no sea perfecto)
-    return objetivo, angulo
+    punto_objetivo = set_objetivo()
+    angulo_objetivo = corregir_angulo(ang_robot)  # Se define que esta alineado (aunque no sea perfecto)
+    return punto_objetivo, angulo_objetivo
 
 # Si el objetivo está en la visión del robot pero no en su línea, rotar y avanzar a la vez
 def avanzar_rotar():
-    objetivo = set_objetivo()
-    angulo = angulo()
-    return objetivo, angulo
+    delta_angulo = 0.1  # radianes
+    punto_objetivo = set_objetivo()
+    angulo_objetivo = corregir_angulo(ang_robot + delta_angulo)
+    return punto_objetivo, angulo_objetivo
 
 # Si entre el objetivo y el robot hay un obstaculo, cambiar la posición del objetivo para esquivar
 def esquivar():
