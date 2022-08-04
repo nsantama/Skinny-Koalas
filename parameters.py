@@ -3,7 +3,7 @@ import cv2
 
 ##### Parámetros #####
 
-SERIAL_PORT = "COM10"
+SERIAL_PORT = "COM8"
 
 # Datos del robot
 ALTO = ""
@@ -34,3 +34,12 @@ TEXT_SCALE = 0.5
 TEXT_COLOR = (255, 255, 255)
 TEXT_THICK = 2
 GAUSSIAN_KSIZE = (51, 51)
+
+
+# Controlador
+KP_DIST = 1
+KI_DIST = 0
+KD_DIST = 0
+KP_ANG = 5
+KI_ANG = 0
+KD_ANG = 0

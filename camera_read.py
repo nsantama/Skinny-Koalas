@@ -159,7 +159,7 @@ class Brain:
             print(f"Enviando {self.msg}")
             msgEncode = str.encode(self.msg)
             ser.write(msgEncode)
-            time.sleep(0.01)
+            time.sleep(0.5)
         # Cerramos el puerto serial abierto una vez terminado el codigo
         ser.close()
 
@@ -227,7 +227,7 @@ if __name__ == '__main__':
                 ball_delta = center3 - robot_center
                 ball_angle = np.arctan2(ball_delta[1], ball_delta[0]) - robot_angle
                 cv2.putText(res, f"Ball: [{round(ball_dist)}, {round(np.rad2deg(ball_angle), 1)}]",
-                            (0, 100), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
+                            (0, 75), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
 
             if center4 is not None and center5 is not None:  # Enemigo
                 cv2.line(res, center4, center5, (255, 255, 255), 2)
