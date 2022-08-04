@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-
+a = True
 nCam = 1
 LowerColorError = np.array([-10, -35, -35])
 UpperColorError = np.array([10, 35, 35])
@@ -15,6 +15,7 @@ robot_angle = 0
 color1_hsv = np.array([0, 0, 0])
 color2_hsv = np.array([0, 0, 0])
 color3_hsv = np.array([0, 0, 0])
+obj = (0,0)
 
 
 def write_colors():
@@ -38,21 +39,24 @@ def read_colors():
 
 
 def _mouseEvent(event, x, y, flags, param):
-    global nClick, color1_hsv, color2_hsv, color3_hsv, frame
+    global nClick, color1_hsv, color2_hsv, color3_hsv, frame, obj
 
     if event == cv2.EVENT_LBUTTONDOWN:
         hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         if nClick == 1:
+            #nClick += 1
             color1_hsv = hsv_frame[y, x]
             print(f"Color 1: {color1_hsv}  |  Posicion: {[x, y]}")
             nClick += 1
         elif nClick == 2:
+            #nClick += 1
             color2_hsv = hsv_frame[y, x]
             print(f"Color 2: {color2_hsv}  |  Posicion: {[x, y]}")
             nClick += 1
         elif nClick == 3:
             color3_hsv = hsv_frame[y, x]
             print(f"Color 3: {color3_hsv}  |  Posicion: {[x, y]}")
+            obj = (x, y)
             nClick += 1
             write_colors()
         else:
@@ -83,7 +87,7 @@ def get_mass_center(mask):
         return None
 
 
-def draw_centers(img, mass_center1, mass_center2, mass_center3):
+def draw_centers(img, mass_center1, mass_center2, mass_center3, obj):
     color_mc1 = (255, 0, 0)
     color_mc2 = (0, 0, 255)
     color_mc3 = (0, 255, 0)
@@ -93,11 +97,13 @@ def draw_centers(img, mass_center1, mass_center2, mass_center3):
         cv2.circle(img, mass_center2, 10, color_mc2, -1)
     if mass_center3 is not None:
         cv2.circle(img, mass_center3, 10, color_mc3, -1)
+    if obj is not None:
+        cv2.circle(img, obj, 10, (255, 255, 0), -1)
 
 
 def camerarun():
-    global nClick, color1_hsv, color2_hsv, color3_hsv, nCam, LowerColorError, UpperColorError, \
-        gaussian_ksize, text_font, text_scale, text_color, text_thick, frame, robot_center, robot_angle
+    global nClick, color1_hsv, color2_hsv, color3_hsv, nCam, LowerColorError, UpperColorError, a, \
+        gaussian_ksize, text_font, text_scale, text_color, text_thick, frame, robot_center, robot_angle, center3
     cap = cv2.VideoCapture(nCam)
     nClick = 1
     cv2.namedWindow('frame', cv2.WINDOW_AUTOSIZE)
@@ -119,7 +125,7 @@ def camerarun():
         center1 = get_mass_center(Color1Mask)  # Front
         center2 = get_mass_center(Color2Mask)  # Back
         center3 = get_mass_center(Color3Mask)  # Ball
-        draw_centers(res, center1, center2, center3)
+        draw_centers(res, center1, center2, center3, obj)
 
         if center1 is not None and center2 is not None:
             cv2.line(res, center1, center2, (255, 255, 255), 2)
@@ -142,6 +148,7 @@ def camerarun():
         cv2.imshow('res', res)
 
         if cv2.waitKey(1) & 0xFF == 27:
+            a = False
             break
 
     cap.release()
