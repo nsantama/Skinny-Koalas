@@ -11,7 +11,8 @@ class Brain:
         self.controlpos = ControlPos()
         self.controltr = threading.Thread(target=self.control, daemon=True)
         self.sendinfo = threading.Thread(target=self.send_info, daemon=True)
-        self.msg = "0,0"
+        self.msg = "0,0;"
+        self.emergency = False
 
     def control(self):
         #while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:
@@ -23,25 +24,29 @@ class Brain:
             self.controlpos.error_ang_ = self.controlpos.error_ang
             self.controlpos.error_ang = camera.robot_angle - self.controlpos.angRef
             x, y =self.controlpos.get_control()
-            self.msg = f"{x},{y}"
+            self.msg = f"{int(x)},{int(y)};"
 
     def start(self):
         self.camara.start()
-        #self.sendinfo.start()
-        time.sleep(1)
-        print("hola")
+        while True:
+            try:
+                print(camera.frame.shape)
+                break
+            except AttributeError:
+                time.sleep(0.5)
+        self.sendinfo.start()
         self.controltr.start()
 
 
     def send_info(self):
-        ser = serial.Serial("COM5",baudrate = 38400,timeout = 1)
+        ser = serial.Serial("COM6",baudrate = 38400,timeout = 1)
         time.sleep(1)
 
         while(True):
+            #print(f"Enviando {self.msg}")
             msgEncode = str.encode(self.msg)
             ser.write(msgEncode)
             time.sleep(0.5)
-
         # Cerramos el puerto serial abierto una vez terminado el codigo
         ser.close()
 

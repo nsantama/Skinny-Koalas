@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-nCam = 0
+nCam = 1
 LowerColorError = np.array([-10, -35, -35])
 UpperColorError = np.array([10, 35, 35])
 gaussian_ksize = (51, 51)
