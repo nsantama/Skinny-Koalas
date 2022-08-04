@@ -32,7 +32,8 @@ x_arco = 0
 y_arco = 0
 
 # Ángulo calculado en procesamiento de imágenes (radianes)
-ang = 0
+ang_robot = 0  # del robot c/r marco referencia
+ang_ball  # de la pelota c/r a robot
 
 
 ##### Funciones: Hay que retornar la posición y el ángulo #####
@@ -51,21 +52,22 @@ def set_objetivo():
 
 # Si el objetivo no esta en la visión del robot, rotar sobre su propio eje hasta que lo encuentre
 def rotar():
+    delta_angulo = 0.1  # radianes
     punto_objetivo = (x_center_r, y_center_r)
-    angulo_objetivo = corregir_angulo()
+    angulo_objetivo = corregir_angulo(ang_robot + delta_angulo)
     return punto_objetivo, angulo_objetivo
 
 # Si el objetivo esta en la línea del robot, avanzar derecho
 def avanzar():
     punto_objetivo = set_objetivo()
-    angulo_objetivo = 0  # Se define que esta alineado (aunque no sea perfecto)
+    angulo_objetivo = corregir_angulo(ang_robot)  # Se define que esta alineado (aunque no sea perfecto)
     return punto_objetivo, angulo_objetivo
 
 # Si el objetivo está en la visión del robot pero no en su línea, rotar y avanzar a la vez
 def avanzar_rotar():
     delta_angulo = 0.1  # radianes
     punto_objetivo = set_objetivo()
-    angulo_objetivo = corregir_angulo(ang + delta_angulo)
+    angulo_objetivo = corregir_angulo(ang_robot + delta_angulo)
     return punto_objetivo, angulo_objetivo
 
 # Si entre el objetivo y el robot hay un obstaculo, cambiar la posición del objetivo para esquivar
