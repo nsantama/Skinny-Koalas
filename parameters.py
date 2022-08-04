@@ -23,7 +23,7 @@ ANCHO_ENEMIGO_P = ""
 
 # Camara
 a = True
-nCam = 1
+N_CAM = 1
 LOWER_COLOR_ERROR = np.array([-10, -35, -35])
 UPPER_COLOR_ERROR = np.array([10, 35, 35])
 
@@ -31,4 +31,4 @@ TEXT_FONT = cv2.FONT_HERSHEY_SIMPLEX
 TEXT_SCALE = 0.5
 TEXT_COLOR = (255, 255, 255)
 TEXT_THICK = 2
-gaussian_ksize = (51, 51)
+GAUSSIAN_KSIZE = (51, 51)

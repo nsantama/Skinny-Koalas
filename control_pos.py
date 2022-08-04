@@ -1,6 +1,5 @@
 import time
 import numpy as np
-import camera_read as camera
 
 
 class ControlPos:
@@ -41,21 +40,17 @@ class ControlPos:
         k2 = Kp*Kd/Ts
         return (k0, k1, k2)
 
-    def get_control(self):
-        self.t = time.time()
-        time.sleep(0.01)
-        Ts = self.t - self.t_
-        self.t_ = self.t
+    def get_control(self, Ts):
         k0_dist, k1_dist, k2_dist = self.get_coef(Ts, self.Kp_dist, self.Ki_dist, self.Kd_dist)
         k0_ang, k1_ang, k2_ang = self.get_coef(Ts, self.Kp_ang, self.Ki_ang, self.Kd_ang)
         self.control_dist_ = self.control_dist
         self.control_and_ = self.control_and
         self.control_dist = self.control_dist_ + *self.error_dist + k1_dist*self.error_dist_ + k2_dist*self.error_dist__
         self.control_and = self.control_and_ + k0_ang*self.error_ang + k1_ang*self.error_ang_ + k2_ang*self.error_ang__
-        self.control_dist = max(self.control_dist_min, self.control_dist)
-        self.control_dist = min(self.control_dist, self.control_dist_max)
-        self.control_and = max(self.control_and_min, self.control_and)
-        self.control_and = min(self.control_and, self.control_and_max)
+        #self.control_dist = max(self.control_dist_min, self.control_dist)
+        #self.control_dist = min(self.control_dist, self.control_dist_max)
+        #self.control_and = max(self.control_and_min, self.control_and)
+        #self.control_and = min(self.control_and, self.control_and_max)
 
         vel_R = self.control_dist + self.control_and
         vel_L = self.control_dist - self.control_and
