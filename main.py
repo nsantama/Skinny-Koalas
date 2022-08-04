@@ -5,6 +5,7 @@ import time
 import serial
 import numpy as np
 
+
 class Brain:
     def __init__(self):
         self.camara = threading.Thread(target=camera.camerarun)
@@ -15,7 +16,7 @@ class Brain:
         self.emergency = False
 
     def control(self):
-        #while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:
+        # while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:
         while (True):
             self.controlpos.error_dist__ = self.controlpos.error_dist_
             self.controlpos.error_dist_ = self.controlpos.error_dist
@@ -37,7 +38,6 @@ class Brain:
         self.sendinfo.start()
         self.controltr.start()
 
-
     def send_info(self):
         ser = serial.Serial("COM6",baudrate = 38400,timeout = 1)
         time.sleep(1)
@@ -54,9 +54,10 @@ class Brain:
         print((np.array(camera.frame.shape)[:2]/2).astype(int))
         self.controlpos.posRef = (np.array(camera.frame.shape)[:2]/2).astype(int)
 
+
 if __name__ == '__main__':
     cerebro = Brain()
     cerebro.start()
     time.sleep(2)
-    cerebro.set_pos_ref((0,0))
+    cerebro.set_pos_ref((0, 0))
     print("fin")

@@ -10,7 +10,7 @@ text_font = cv2.FONT_HERSHEY_SIMPLEX
 text_scale = 0.5
 text_color = (255, 255, 255)
 text_thick = 2
-robot_center = np.array((0,0))
+robot_center = np.array((0, 0))
 robot_angle = 0
 color1_hsv = np.array([0, 0, 0])
 color2_hsv = np.array([0, 0, 0])
@@ -26,6 +26,7 @@ def write_colors():
     with open('color3.npy', 'wb') as color:
         np.save(color, color3_hsv)
 
+
 def read_colors():
     global color1_hsv, color2_hsv, color3_hsv
     with open('color1.npy', 'rb') as color:
@@ -34,6 +35,7 @@ def read_colors():
         color2_hsv = np.load(color)
     with open('color3.npy', 'rb') as color:
         color3_hsv = np.load(color)
+
 
 def _mouseEvent(event, x, y, flags, param):
     global nClick, color1_hsv, color2_hsv, color3_hsv, frame
@@ -91,6 +93,7 @@ def draw_centers(img, mass_center1, mass_center2, mass_center3):
         cv2.circle(img, mass_center2, 10, color_mc2, -1)
     if mass_center3 is not None:
         cv2.circle(img, mass_center3, 10, color_mc3, -1)
+
 
 def camerarun():
     global nClick, color1_hsv, color2_hsv, color3_hsv, nCam, LowerColorError, UpperColorError, \

@@ -5,7 +5,7 @@ import camera_read as camera
 
 class ControlPos:
     def __init__(self):
-        self.posRef = np.array((0,0))
+        self.posRef = np.array((0, 0))
         self.angRef = 0
         self.control_dist = 0
         self.control_and = 0
@@ -41,7 +41,6 @@ class ControlPos:
         k2 = Kp*Kd/Ts
         return (k0, k1, k2)
 
-
     def get_control(self):
         self.t = time.time()
         time.sleep(0.01)
@@ -70,7 +69,6 @@ class ControlPos:
         msg_encode = str.encode(msg)
         ser.write(msg_encode)
         time.sleep(0.5)"""
-
 
     def make_control(self):
         while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:
