@@ -3,26 +3,29 @@
 ## Librerías
 from sympy import Point, Line, 
 
-## Parámetros 
-# Datos del robot
-ALTO = ""
-ANCHO = ""
-DIST_MAYOR_CM = "" # distancia mayor entre el centro de masa del robot y alguno de los márgenes de su estructura
+## Parámetros
+# Dato de procesamiento de imágenes: distancia entre CM y centro de uno de los círculos
+DATO = 0
 
-# Proporciones de tamaño respecto al largo del robot
-RADIO_PELOTA_P = ""
-LARGO_ENEMIGO_P = ""
-LARGO_CANCHA_P = ""
-ANCHO_CANCHA_P = ""
-LARGO_LIM_ARCO_CANCHA = "" # largo entre el límite de la cancha y el comienzo de área del arco
-ANCHO_LIM_ARCO_CANCHA = "" # ancho entre el límite de la cancha y el comienzo de área del arco
-MARGEN_D_ARCO = "" # distancia de margen en la que el robot se posicionará para defender el arco
+# Datos del robot respecto al parámetro
+ALTO = 4.7
+ANCHO = 4.7
+DIST_MAYOR_CM = 2.9 # distancia mayor entre el centro de masa del robot y alguno de los márgenes de su estructura
+
+# Proporciones de tamaño respecto al parámetro
+RADIO_PELOTA_P = 0.8
+LARGO_ENEMIGO_P = 4.7
+LARGO_CANCHA_P = 52.2
+ANCHO_CANCHA_P = 25.6
+LARGO_LIM_ARCO_CANCHA = 3.6 # largo entre el límite de la cancha y el comienzo de área del arco
+ANCHO_LIM_ARCO_CANCHA = 8.2 # ancho entre el límite de la cancha y el comienzo de área del arco
+MARGEN_D_ARCO = 4.7 # distancia de margen en la que el robot se posicionará para defender el arco
 
 # Proporciones de tamaño respecto al ancho del robot
-ANCHO_ENEMIGO_P = ""
+ANCHO_ENEMIGO_P = 4.7
 
 ## Datos
-# Coordenadas frente robot
+# Coordenadas centro círculo frente robot
 x_front_r = 0
 y_front_r = 0
 
@@ -46,8 +49,11 @@ y_ball = 0
 x_arco = 0
 y_arco = 0
 
-# Ángulo calculado en procesamiento de imágenes
+# Ángulo calculado en procesamiento de imágenes a pelota
 ang = 0
+
+# Ángulo calculado en procesamiento de imágenes a enemigo
+ang_e = 0
 
 ## Funciones: Hay que retornar la posición y el ángulo
 # Si el robot debe rotar, se define el ángulo en grados y si será horario y antihorario
@@ -61,10 +67,21 @@ def angulo():
     if ang == 360:
         ang = 0
     return ang
-        
+
+
+
+def circulo_goniometrico():
+
+    pass
+
+
 # Define cual es el punto objetivo dependiendo de distintas condiciones
 def set_objetivo():
-    pass
+    if bloqueado() is False:
+        if ang > 3 and ang < 20:
+            pass
+
+
 
 # Si el objetivo no esta en la visión del robot, rotar sobre su propio eje hasta que lo encuentre
 def rotar():
@@ -97,7 +114,9 @@ def desatascar():
     # Define una pos objetivo atrás del robot
     # El angulo es 0 (esta alineado con su objetivo, aunque esté de espalda, no queremos que rote)
     # Avanza a ese objetivo
-    pass 
+    nuevo_x = -3 * x_front_r
+    nuevo_y = -3 * y_front_r
+    return (nuevo_x, nuevo_y) , 0 
 
 # Devuelve un bool de si está bloqueado hacia su objetivo o no
 def bloqueado():
