@@ -1,28 +1,12 @@
 ## Estrategia
 
-### Librerías ###
+##### Librerías #####
 from sympy import Point, Line
 import numpy as np
+import parameters as p
 
-### Parámetros ### 
-# Datos del robot
-ALTO = ""
-ANCHO = ""
-DIST_MAYOR_CM = "" # distancia mayor entre el centro de masa del robot y alguno de los márgenes de su estructura
 
-# Proporciones de tamaño respecto al largo del robot
-RADIO_PELOTA_P = ""
-LARGO_ENEMIGO_P = ""
-LARGO_CANCHA_P = ""
-ANCHO_CANCHA_P = ""
-LARGO_LIM_ARCO_CANCHA = "" # largo entre el límite de la cancha y el comienzo de área del arco
-ANCHO_LIM_ARCO_CANCHA = "" # ancho entre el límite de la cancha y el comienzo de área del arco
-MARGEN_D_ARCO = "" # distancia de margen en la que el robot se posicionará para defender el arco
-
-# Proporciones de tamaño respecto al ancho del robot
-ANCHO_ENEMIGO_P = ""
-
-### Datos ###
+##### Datos #####
 # Coordenadas frente robot
 x_front_r = 0
 y_front_r = 0
@@ -50,42 +34,39 @@ y_arco = 0
 # Ángulo calculado en procesamiento de imágenes (radianes)
 ang = 0
 
-### Funciones: Hay que retornar la posición y el ángulo ###
-# Si el robot debe rotar, se define el ángulo en grados y si será horario y antihorario
 
-def angulo(ang):
+##### Funciones: Hay que retornar la posición y el ángulo #####
+
+# Si el robot debe rotar, se define el ángulo en grados y si será horario y antihorario
+def corregir_angulo(ang):
     if ang > np.pi:
         ang = ang - 2*np.pi
     elif ang < -np.pi:
         ang = 2*np.pi + ang
     return ang
 
-
 # Define cual es el punto objetivo dependiendo de distintas condiciones
 def set_objetivo():
     pass
 
-
 # Si el objetivo no esta en la visión del robot, rotar sobre su propio eje hasta que lo encuentre
 def rotar():
-    objetivo = (x_center_r, y_center_r)
-    angulo = angulo()
-    return objetivo, angulo
-
+    punto_objetivo = (x_center_r, y_center_r)
+    angulo_objetivo = corregir_angulo()
+    return punto_objetivo, angulo_objetivo
 
 # Si el objetivo esta en la línea del robot, avanzar derecho
 def avanzar():
-    objetivo = set_objetivo()
-    angulo = 0 # Se define que esta alineado (aunque no sea perfecto)
-    return objetivo, angulo
-
+    punto_objetivo = set_objetivo()
+    angulo_objetivo = 0  # Se define que esta alineado (aunque no sea perfecto)
+    return punto_objetivo, angulo_objetivo
 
 # Si el objetivo está en la visión del robot pero no en su línea, rotar y avanzar a la vez
 def avanzar_rotar():
-    objetivo = set_objetivo()
-    angulo = angulo()
-    return objetivo, angulo
-
+    delta_angulo = 0.1  # radianes
+    punto_objetivo = set_objetivo()
+    angulo_objetivo = corregir_angulo(ang + delta_angulo)
+    return punto_objetivo, angulo_objetivo
 
 # Si entre el objetivo y el robot hay un obstaculo, cambiar la posición del objetivo para esquivar
 def esquivar():
@@ -93,7 +74,6 @@ def esquivar():
     # Setea como objetivo un punto viable que acerque al objetivo y que ya no tenga un objeto entre medio
     # o quizas engañarlo (?) y hacer que avance y rote para hacer una curva
     pass
-
 
 # Si es que las ruedas se mueven pero no cambia la posición, retroceder y girar
 def desatascar():
