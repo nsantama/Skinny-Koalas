@@ -138,7 +138,7 @@ class Brain:
             self.controlpos.t_ = self.controlpos.t
             self.controlpos.error_dist__ = self.controlpos.error_dist_
             self.controlpos.error_dist_ = self.controlpos.error_dist
-            self.controlpos.error_dist = np.linalg.norm(robot_center - self.controlpos.posRef)
+            self.controlpos.error_dist = np.linalg.norm(robot_center - self.controlpos.posRef) * p.PIX_2_M
             self.controlpos.error_ang__ = self.controlpos.error_ang_
             self.controlpos.error_ang_ = self.controlpos.error_ang
             self.controlpos.error_ang = robot_angle - self.controlpos.angRef
