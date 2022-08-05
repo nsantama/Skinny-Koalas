@@ -52,20 +52,24 @@ def strategy_main(robot_pos_F, robot_pos_C, robot_ang,
     objetivo = set_objetivo()  # Se define el punto objetivo
     area = zona_objetivo(objetivo)  # Ve en qué ubicación se encuentra el objetivo
     if area == "fuera":
+        #print('fuera')
         pos_enviar, ang_enviar = rotar(objetivo)
     elif area == "visión":
+        #print('vision')
         pos_enviar, ang_enviar = avanzar_rotar(objetivo)
     elif area == "ataque":
+        #print('ataque')
         pos_enviar, ang_enviar = avanzar(objetivo)
+    #print("pos_enviar:", pos_enviar, "Ang_enviar:",ang_enviar)
     return pos_enviar, ang_enviar
 
-# Ver en qué área del robot se encuentra el objetivo, para decidir la  
+# Ver en qué área del robot se encuentra el objetivo, para decidir la
 def zona_objetivo(objetivo):
     global ang_ball, x_center_r, y_center_r, ang_robot
     if ang_ball > np.pi/12 or ang_ball < -np.pi/12:
         return "fuera"
     else:
-        c_adelante = y_center_r + p.DIST_ADEL_A * p.DATO
+        c_adelante = y_center_r + p.DIST_ADEL_A * p.DATO*2
         c_lado_izq = x_center_r - p.DIST_LAR_A * p.DATO
         c_lado_der = x_center_r + p.DIST_LAR_A * p.DATO
         c_maximo = y_center_r + p.LARGO_CANCHA_P * p.DATO
@@ -74,10 +78,13 @@ def zona_objetivo(objetivo):
         s1 = Point(rotate(e_c, (c_lado_izq, c_maximo), ang_robot))
         i2 = Point(rotate(e_c, (c_lado_der, c_adelante), ang_robot))
         s2 = Point(rotate(e_c, (c_lado_der, c_maximo), ang_robot))
-        p1, p2, p3, p4 = [(s1), (s2), (i1), (i2)]
+        p1, p2, p3, p4 = s1, s2, i1, i2
         area_ataque = Polygon(p1, p2, p3, p4)
-        if area_ataque.contains(objetivo):
-            return "ataque"
+        if type(area_ataque) == Polygon:
+            if area_ataque.contains(objetivo):
+                return "ataque"
+            else:
+                return "visión"
         else:
             return "visión"
 
@@ -117,7 +124,7 @@ def set_objetivo():
 # Define el error del ángulo entre el robot y el objetivo
 def set_angulo(objetivo):
     global pos_ball, ang_ball, x_center_r, y_center_r, x_front_r, y_front_r
-    if objetivo == pos_ball:
+    if objetivo.all() == pos_ball.all():
         error_ang = ang_ball
     else:
         p_o = Point(objetivo) # Punto objetivo
@@ -169,7 +176,7 @@ def desatascar():
     # Avanza a ese objetivo
     nuevo_x = -3 * (x_front_r - x_center_r)
     nuevo_y = -3 * (y_front_r - y_center_r)
-    return (nuevo_x, nuevo_y) , 0 
+    return (nuevo_x, nuevo_y) , 0
 
 # Devuelve un bool de si está bloqueado hacia su objetivo o no
 def bloqueado(objetivo):
@@ -215,4 +222,5 @@ def en_dominio():
         return True
 
 def atascado():
+    pass
     # Si las ruedas se mueven y no avanza, retorna true

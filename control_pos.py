@@ -58,3 +58,11 @@ class ControlPos:
     def make_control(self):
         while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:
             self.get_control()
+
+    def reset_error(self):
+        self.error_ang = 0
+        self.error_ang_ = 0
+        self.error_ang__ = 0
+        self.error_dist = 0
+        self.error_dist_ = 0
+        self.error_dist__ = 0

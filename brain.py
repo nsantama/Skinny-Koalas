@@ -15,6 +15,7 @@ class Brain:
         self.emergency = False
         self.veld = 0
         self.veli = 0
+        self.running = True
 
     def control(self):
         global robot_center
@@ -42,8 +43,14 @@ class Brain:
         ser = serial.Serial(p.SERIAL_PORT, baudrate=38400, timeout=100)
         time.sleep(1)
 
-        while True:
-            print(f"Enviando {self.msg}")
+        while self.running:
+            """if not int(abs(self.controlpos.error_ang) > self.controlpos.margen_ang):
+                print("ALINEADO")
+            else:
+                print(f"Enviando {self.msg}")
+            if not int(abs(self.controlpos.error_dist) > self.controlpos.margen_dist):
+                print("Llego!")
+                self.controlpos.reset_error()"""
             #print(self.controlpos.error_dist)
             msgEncode = str.encode(self.msg)
             ser.write(msgEncode)

@@ -8,23 +8,28 @@ PIX_2_M = 1.46 / 457
 RADIO_ROBOT = 0.2 / 2
 RADIO_RUEDA = 0.09 / 2
 
+# Dato de procesamiento de imágenes: distancia entre CM y centro de uno de los círculos
+DATO = 0 # 4,5 cm es el dato real
 
-# Datos del robot
-ALTO = ""
-ANCHO = ""
-DIST_MAYOR_CM = "" # distancia mayor entre el centro de masa del robot y alguno de los márgenes de su estructura
+# Datos del robot respecto al parámetro
+ALTO = 4.7
+ANCHO = 4.7
+DIST_MAYOR_CM = 2.9 # distancia mayor entre el centro de masa del robot y alguno de los márgenes de su estructura
 
-# Proporciones de tamaño respecto al largo del robot
-RADIO_PELOTA_P = ""
-LARGO_ENEMIGO_P = ""
-LARGO_CANCHA_P = ""
-ANCHO_CANCHA_P = ""
-LARGO_LIM_ARCO_CANCHA = "" # largo entre el límite de la cancha y el comienzo de área del arco
-ANCHO_LIM_ARCO_CANCHA = "" # ancho entre el límite de la cancha y el comienzo de área del arco
-MARGEN_D_ARCO = "" # distancia de margen en la que el robot se posicionará para defender el arco
+# Proporciones de tamaño respecto al parámetro
+RADIO_PELOTA_P = 0.8
+LARGO_ENEMIGO_P = 4.7
+LARGO_CANCHA_P = 52.2
+ANCHO_CANCHA_P = 25.6
+LARGO_LIM_ARCO_CANCHA = 3.6 # largo entre el límite de la cancha y el comienzo de área del arco
+ANCHO_LIM_ARCO_CANCHA = 8.2 # ancho entre el límite de la cancha y el comienzo de área del arco
+MARGEN_D_ARCO = 4.7 # distancia de margen en la que el robot se posicionará para defender el arco
+DIST_ADEL_A = 1.7
+DIST_LAR_A = 1.7
+DIST_LAR_AD_A = 0.7
 
 # Proporciones de tamaño respecto al ancho del robot
-ANCHO_ENEMIGO_P = ""
+ANCHO_ENEMIGO_P = 4.7
 
 
 # Camara
