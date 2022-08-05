@@ -129,9 +129,9 @@ class Brain:
         self.veli = 0
 
     def control(self):
-        # while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:
-        while True:
-            #print(self.controlpos.error_dist)
+        controling = True
+        while controling:
+            #while True:
             self.controlpos.t = time.time()
             time.sleep(0.01)
             Ts = self.controlpos.t - self.controlpos.t_
@@ -141,22 +141,23 @@ class Brain:
             self.controlpos.error_dist = np.linalg.norm(robot_center - self.controlpos.posRef) * p.PIX_2_M
             self.controlpos.error_ang__ = self.controlpos.error_ang_
             self.controlpos.error_ang_ = self.controlpos.error_ang
-            self.controlpos.error_ang = robot_angle - self.controlpos.angRef
+            self.controlpos.error_ang = self.controlpos.angAct - self.controlpos.angRef
             self.veld, self.veli = self.controlpos.get_control(Ts)
+            #controling = abs(self.controlpos.error_dist) > self.controlpos.margen_dist or abs(self.controlpos.error_ang) > self.controlpos.margen_ang
 
     def start(self):
-        time.sleep(5)
         print("paso1")
         self.sendinfo.start()
         print("paso2")
         self.controltr.start()
 
     def send_info(self):
-        ser = serial.Serial(p.SERIAL_PORT, baudrate=38400, timeout=1)
+        ser = serial.Serial(p.SERIAL_PORT, baudrate=38400, timeout=100)
         time.sleep(1)
 
         while True:
             print(f"Enviando {self.msg}")
+            print(self.controlpos.error_dist)
             msgEncode = str.encode(self.msg)
             ser.write(msgEncode)
             #time.sleep(0.5)
@@ -206,12 +207,6 @@ if __name__ == '__main__':
         center5 = get_mass_center(Color5Mask)  # Enemy Back
         draw_centers(res)
 
-        #new_pos = function para elegir a donde ir
-        new_pos = center3
-        #new_pos = (np.array(frame.shape)[:2]/2).astype(int)
-
-        cerebro.set_pos_ref(new_pos)
-        
         if center1 is not None and center2 is not None:
             cv2.line(res, center1, center2, (255, 255, 255), 2)
             robot_center = np.array((0.5 * (center1 + center2)).astype(int))
@@ -248,6 +243,13 @@ if __name__ == '__main__':
                 cv2.putText(res,  f"Enemy: [{enemy_center[0]}, {enemy_center[1]}, {round(np.rad2deg(enemy_angle), 1)}]",
                             (0, 50), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
 
+        #new_pos = function para elegir a donde ir
+        new_pos = center3
+        #cerebro.controlpos.angAct = ball_angle
+        #new_pos = (np.array(frame.shape)[:2]/2).astype(int)
+
+        cerebro.set_pos_ref(new_pos)
+
         cv2.imshow('frame', frame)
         cv2.imshow('res', res)
         if auto:
@@ -255,6 +257,6 @@ if __name__ == '__main__':
         if cv2.waitKey(1) & 0xFF == 27:
             break
     cerebro.msg = f"0,0;"
-    time.sleep(1)
+    time.sleep(0.1)
     cap.release()
     cv2.destroyAllWindows()

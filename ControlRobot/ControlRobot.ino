@@ -182,8 +182,8 @@ void loop() {
       {
         Serial.println("No hay mensaje");
         Serial.println(mensaje);
-        rD = 0;
-        rI = 0;
+        //rD = 0;
+        //rI = 0;
       }
       newMsg = false;
     }
