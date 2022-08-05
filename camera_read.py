@@ -4,6 +4,7 @@ import numpy as np
 import os
 from brain import Brain
 import parameters as p
+from strategy import main as strategy_main
 
 running = True
 auto = True
@@ -186,8 +187,11 @@ if __name__ == '__main__':
                             (0, 50), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
 
         # Actualizar a donde ir
-        new_pos = center3
-        new_angle = ball_angle
+        # new_pos = center3
+        # new_angle = ball_angle
+        new_pos, new_angle = strategy_main(center1, robot_center, robot_angle,
+                                           center4, enemy_center, enemy_angle,
+                                           center3, ball_angle)
         cerebro.set_ang(new_angle)
         cerebro.set_pos_ref(new_pos)
 

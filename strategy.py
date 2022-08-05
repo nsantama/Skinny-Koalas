@@ -24,9 +24,6 @@ y_front_e = 0
 x_center_e = 0
 y_center_e = 0
 
-# Coordenadas pelota
-x_ball = 0
-y_ball = 0
 
 # Coordenadas arco
 x_arco = 0
@@ -43,7 +40,22 @@ objetivo = pos_ball # Por default, el objetivo es la pelota
 
 ##### Funciones: Hay que retornar la posición y el ERROR del ángulo #####
 
-def main():
+def main(robot_pos_F, robot_pos_C, robot_ang,
+         enemy_pos_F, enemy_pos_C, enemy_ang,
+         ball_pos, ball_ang):
+    global x_front_r, y_front_r, x_center_r, y_center_r, ang_robot
+    global x_front_e, y_front_e, x_center_e, y_center_e, ang_enemigo
+    global pos_ball, ang_ball
+    global objetivo
+    x_front_r, y_front_r = robot_pos_F
+    x_center_r, y_center_r = robot_pos_C
+    ang_robot = robot_ang
+    x_front_e, y_front_e = enemy_pos_F
+    x_center_e, y_center_e = enemy_pos_C
+    ang_enemigo = enemy_ang
+    pos_ball = ball_pos
+    ang_ball = ball_ang
+    
     # if atascado(): # Si lleva un rato sin moverse (atascado) que retroceda
     #     pos_enviar, ang_enviar = desatascar()
     #else: # Si no está atascado
@@ -85,6 +97,7 @@ def corregir_angulo(ang):
 
 # Define cual es el punto objetivo dependiendo de distintas condiciones
 def set_objetivo():
+    global pos_ball
     if not en_dominio(): # Si no esta en dominio, que su objetivo sea la pelota
         objetivo = pos_ball
         if bloqueado(objetivo):
@@ -97,6 +110,7 @@ def set_objetivo():
 
 # Define el error del ángulo entre el robot y el objetivo
 def set_angulo(objetivo):
+    global pos_ball, ang_ball, x_center_r, y_center_r, x_front_r, y_front_r
     if objetivo == pos_ball:
         error_ang = ang_ball
     else:
@@ -110,6 +124,7 @@ def set_angulo(objetivo):
 
 # Si el objetivo no esta en la visión del robot, rotar sobre su propio eje hasta que lo encuentre
 def rotar(objetivo):
+    global x_center_r, y_center_r
     punto_objetivo = (x_center_r, y_center_r)
     error_ang = set_angulo(objetivo)
     return punto_objetivo, error_ang
@@ -128,6 +143,7 @@ def avanzar_rotar(objetivo):
 
 # Si entre el objetivo y el robot hay un obstaculo, cambiar la posición del objetivo para esquivar
 def esquivar(objetivo):
+    global ang_ball, x_center_r, y_center_r
     # Se usa dentro de set_objetivo
     # Setea como objetivo un punto viable que acerque al objetivo y que ya no tenga un objeto entre medio
     # rota y define un nuevo punto hasta que bloqueado sea False
@@ -140,6 +156,7 @@ def esquivar(objetivo):
 
 # Si es que las ruedas se mueven pero no cambia la posición, retroceder y girar
 def desatascar():
+    global x_front_r, y_front_r, x_center_r, y_center_r
     # Se usa dentro de set_objetivo
     # Define una pos objetivo atrás del robot
     # El angulo es 0 (esta alineado con su objetivo, aunque esté de espalda, no queremos que rote)
@@ -150,14 +167,15 @@ def desatascar():
 
 # Devuelve un bool de si está bloqueado hacia su objetivo o no
 def bloqueado(objetivo):
+    global x_front_r, y_front_r, x_center_e, y_center_e, ang_enemigo
     r = Point(x_front_r, y_front_r) # Punto frente robot
     o = Point(objetivo) # Punto del objetivo
     trayectoria = Line(r, o)
     e_c = (x_center_e, y_center_e) # Centro de masa enemigo
-    p_1x_ = x_center_e - p.ANCHO/2
-    p_2x_ = x_center_e + p.ANCHOle
-    p_1y_ = y_center_e + p.ALTO/2
-    p_2y_ = y_center_e - p.ALTO/2
+    p_1x_ = x_center_e - (p.ANCHO * p.DATO)/2
+    p_2x_ = x_center_e + (p.ANCHO * p.DATO)/2
+    p_1y_ = y_center_e + (p.ALTO * p.DATO)/2
+    p_2y_ = y_center_e - (p.ALTO * p.DATO)/2
     s1 = Point(rotate(e_c, (p_1x_, p_1y_), ang_enemigo))
     s2 = Point(rotate(e_c, (p_2x_, p_1y_), ang_enemigo))
     i1 = Point(rotate(e_c, (p_1x_, p_2y_), ang_enemigo))
@@ -170,8 +188,9 @@ def bloqueado(objetivo):
         return True
 
 def en_dominio():
+    global pos_ball, x_center_r, y_center_r, ang_robot
     # Si la pelota esta en area, devuelve true
-    pelota = Point(x_ball, y_ball)
+    pelota = Point(*pos_ball)
     c_adelante = y_center_r + p.DIST_ADEL_A * p.DATO
     c_lado_izq = x_center_r - p.DIST_LAR_A * p.DATO
     c_lado_der = x_center_r + p.DIST_LAR_A * p.DATO
