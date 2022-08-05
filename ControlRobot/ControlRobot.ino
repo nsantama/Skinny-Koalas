@@ -171,7 +171,7 @@ void loop() {
       int comapos = mensaje.indexOf(",");
       String nrD = mensaje.substring(0, comapos);
       String nrI = mensaje.substring(comapos+1);
-      if (not (isnan(nrD.toInt()) || isnan(nrD.toInt())))
+      if (not (isnan(nrD.toInt()) || isnan(nrD.toInt()) and comapos > 0))
       {
         Serial.println("mensaje");
         Serial.println(mensaje);
