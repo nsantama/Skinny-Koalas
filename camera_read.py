@@ -131,7 +131,6 @@ class Brain:
     def control(self):
         controling = True
         while controling:
-            #while True:
             self.controlpos.t = time.time()
             time.sleep(0.01)
             Ts = self.controlpos.t - self.controlpos.t_
@@ -143,7 +142,6 @@ class Brain:
             self.controlpos.error_ang_ = self.controlpos.error_ang
             self.controlpos.error_ang = self.controlpos.angAct - self.controlpos.angRef
             self.veld, self.veli = self.controlpos.get_control(Ts)
-            #controling = abs(self.controlpos.error_dist) > self.controlpos.margen_dist or abs(self.controlpos.error_ang) > self.controlpos.margen_ang
 
     def start(self):
         print("paso1")
@@ -161,7 +159,6 @@ class Brain:
             msgEncode = str.encode(self.msg)
             ser.write(msgEncode)
             #time.sleep(0.5)
-        # Cerramos el puerto serial abierto una vez terminado el codigo
         ser.close()
 
     def control_ref(self):
@@ -169,9 +166,10 @@ class Brain:
             self.set_pos_ref(obj)
 
     def set_pos_ref(self, new_pos):
-        #print((np.array(camera.frame.shape)[:2]/2).astype(int))
-        #self.controlpos.posRef = (np.array(camera.frame.shape)[:2]/2).astype(int)
         self.controlpos.posRef = new_pos
+
+    def set_ang(self, new_ang):
+        self.controlpos.angAct = new_ang
 
 
 if __name__ == '__main__':
@@ -243,11 +241,10 @@ if __name__ == '__main__':
                 cv2.putText(res,  f"Enemy: [{enemy_center[0]}, {enemy_center[1]}, {round(np.rad2deg(enemy_angle), 1)}]",
                             (0, 50), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
 
-        #new_pos = function para elegir a donde ir
+        # Actualizar a donde ir
         new_pos = center3
-        cerebro.controlpos.angAct = ball_angle
-        #new_pos = (np.array(frame.shape)[:2]/2).astype(int)
-
+        new_angle = ball_angle
+        cerebro.set_ang(new_angle)
         cerebro.set_pos_ref(new_pos)
 
         cv2.imshow('frame', frame)

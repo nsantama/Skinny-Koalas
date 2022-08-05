@@ -1,4 +1,3 @@
-import time
 import numpy as np
 import parameters as p
 
@@ -10,6 +9,14 @@ class ControlPos:
         self.angAct = 0
         self.control_dist = 0
         self.control_ang = 0
+        self.error_dist = 0
+        self.error_dist_ = 0
+        self.error_dist__ = 0
+        self.error_ang = 0
+        self.error_ang_ = 0
+        self.error_ang__ = 0
+        self.t = 0
+        self.t_ = 0
 
         self.Kp_dist = p.KP_DIST
         self.Ki_dist = p.KI_DIST
@@ -17,24 +24,12 @@ class ControlPos:
         self.Kp_ang = p.KP_ANG
         self.Ki_ang = p.KI_ANG
         self.Kd_ang = p.KD_ANG
-
-        self.error_dist = 0
-        self.error_dist_ = 0
-        self.error_dist__ = 0
-        self.error_ang = 0
-        self.error_ang_ = 0
-        self.error_ang__ = 0
-
         self.margen_dist = p.MARGEN_DIST
         self.margen_ang = p.MARGEN_ANG
-
         self.control_dist_max = p.MAX_CONTROL_DIST
         self.control_dist_min = -p.MAX_CONTROL_DIST
         self.control_ang_max = p.MAX_CONTROL_ANG
         self.control_ang_min = -p.MAX_CONTROL_ANG
-
-        self.t = 0
-        self.t_ = 0
 
     def get_coef(self, Ts, Kp, Ki, Kd):
         k0 = Kp * (1 + Ts*Ki + Kd/Ts)
@@ -56,19 +51,9 @@ class ControlPos:
 
         move_ang = int(abs(self.error_ang) > self.margen_ang)
         move_pos = 1#int(abs(self.error_dist) > self.margen_dist)
-        vel_R = (self.control_dist*move_pos*(1-move_ang) + (self.control_ang*p.RADIO_ROBOT)*move_ang) / p.RADIO_RUEDA
-        vel_L = (self.control_dist*move_pos*(1-move_ang) - (self.control_ang*p.RADIO_ROBOT)*move_ang) / p.RADIO_RUEDA
-        #print((abs(self.error_ang) > self.margen_ang), self.error_ang, self.margen_ang)
-        return -int(vel_R), -int(vel_L)
-
-        """    def send_control():
-        global control_dist, self.control_ang
-
-        msg = f"{vel_L},{vel_R};"
-        print(msg)
-        msg_encode = str.encode(msg)
-        ser.write(msg_encode)
-        time.sleep(0.5)"""
+        vel_R = -(self.control_dist*move_pos*(1-move_ang) + (self.control_ang*p.RADIO_ROBOT)*move_ang) / p.RADIO_RUEDA
+        vel_L = -(self.control_dist*move_pos*(1-move_ang) - (self.control_ang*p.RADIO_ROBOT)*move_ang) / p.RADIO_RUEDA
+        return int(vel_R), int(vel_L)
 
     def make_control(self):
         while abs(self.error_dist) > self.margen_dist or abs(self.error_ang) > self.margen_ang:

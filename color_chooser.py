@@ -1,5 +1,4 @@
 import cv2
-import serial
 import numpy as np
 import os
 import parameters as p
