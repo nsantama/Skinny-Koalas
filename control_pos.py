@@ -27,8 +27,8 @@ class ControlPos:
         self.margen_dist = 0.001
         self.margen_ang = 0.1
 
-        self.control_dist_max = 100
-        self.control_dist_min = -100
+        self.control_dist_max = 10
+        self.control_dist_min = -10
         self.control_ang_max = 3
         self.control_ang_min = -3
 
@@ -53,8 +53,8 @@ class ControlPos:
         #self.control_ang = max(self.control_ang_min, self.control_ang)
         #self.control_ang = min(self.control_ang, self.control_ang_max)
 
-        vel_R = self.control_dist + self.control_ang
-        vel_L = self.control_dist - self.control_ang
+        vel_R = (self.control_dist + self.control_ang) / p.RADIO
+        vel_L = (self.control_dist - self.control_ang) / p.RADIO
         return -vel_R, -vel_L
 
         """    def send_control():

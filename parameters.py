@@ -9,6 +9,7 @@ SERIAL_PORT = "COM8"
 ALTO = ""
 ANCHO = ""
 DIST_MAYOR_CM = "" # distancia mayor entre el centro de masa del robot y alguno de los márgenes de su estructura
+RADIO = 0.8
 
 # Proporciones de tamaño respecto al largo del robot
 RADIO_PELOTA_P = ""
