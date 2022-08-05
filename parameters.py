@@ -4,6 +4,10 @@ import cv2
 ##### Parámetros #####
 
 SERIAL_PORT = "COM8"
+PIX_2_M = 1.46 / 457
+RADIO_ROBOT = 0.2 / 2
+RADIO_RUEDA = 0.09 / 2
+
 
 # Datos del robot
 ALTO = ""
@@ -37,9 +41,9 @@ GAUSSIAN_KSIZE = (51, 51)
 
 
 # Controlador
-KP_DIST = 1
-KI_DIST = 0
-KD_DIST = 0
-KP_ANG = 5
-KI_ANG = 0
-KD_ANG = 0
+KP_DIST = 0.5
+KI_DIST = 15
+KD_DIST = 0.01
+KP_ANG = 0.5
+KI_ANG = 15
+KD_ANG = 0.01

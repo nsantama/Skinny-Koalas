@@ -48,7 +48,11 @@ def corregir_angulo(ang):
 
 # Define cual es el punto objetivo dependiendo de distintas condiciones
 def set_objetivo():
-    pass
+    if bloqueado() is False:
+        if ang > 3 and ang < 20:
+            pass
+
+
 
 # Si el objetivo no esta en la visión del robot, rotar sobre su propio eje hasta que lo encuentre
 def rotar():
@@ -83,7 +87,9 @@ def desatascar():
     # Define una pos objetivo atrás del robot
     # El angulo es 0 (esta alineado con su objetivo, aunque esté de espalda, no queremos que rote)
     # Avanza a ese objetivo
-    pass 
+    nuevo_x = -3 * x_front_r
+    nuevo_y = -3 * y_front_r
+    return (nuevo_x, nuevo_y) , 0 
 
 # Devuelve un bool de si está bloqueado hacia su objetivo o no
 def bloqueado():

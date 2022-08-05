@@ -138,7 +138,7 @@ class Brain:
             self.controlpos.t_ = self.controlpos.t
             self.controlpos.error_dist__ = self.controlpos.error_dist_
             self.controlpos.error_dist_ = self.controlpos.error_dist
-            self.controlpos.error_dist = np.linalg.norm(robot_center - self.controlpos.posRef)
+            self.controlpos.error_dist = np.linalg.norm(robot_center - self.controlpos.posRef) * p.PIX_2_M
             self.controlpos.error_ang__ = self.controlpos.error_ang_
             self.controlpos.error_ang_ = self.controlpos.error_ang
             self.controlpos.error_ang = robot_angle - self.controlpos.angRef
@@ -226,6 +226,10 @@ if __name__ == '__main__':
                 ball_dist = np.linalg.norm(center3 - robot_center)
                 ball_delta = center3 - robot_center
                 ball_angle = np.arctan2(ball_delta[1], ball_delta[0]) - robot_angle
+                if ball_angle > np.pi:
+                    ball_angle = ball_angle - 2*np.pi
+                elif ball_angle < -np.pi:
+                    ball_angle = ball_angle + 2*np.pi
                 cv2.putText(res, f"Ball: [{round(ball_dist)}, {round(np.rad2deg(ball_angle), 1)}]",
                             (0, 75), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
 
@@ -234,7 +238,12 @@ if __name__ == '__main__':
                 enemy_center = np.array((0.5 * (center4 + center5)).astype(int))
                 enemy_delta = center4 - center5
                 enemy_angle = np.arctan2(enemy_delta[1], enemy_delta[0])
-                angle2enemy = enemy_angle - robot_angle
+                to_enemy_delta = enemy_center - robot_center
+                to_enemy_angle = np.arctan2(to_enemy_delta[1], to_enemy_delta[0]) - robot_angle
+                if to_enemy_angle > np.pi:
+                    to_enemy_angle = to_enemy_angle - 2*np.pi
+                elif to_enemy_angle < -np.pi:
+                    to_enemy_angle = to_enemy_angle + 2*np.pi
                 cv2.circle(res, enemy_center, 10, (255, 255, 255), 1)
                 cv2.putText(res,  f"Enemy: [{enemy_center[0]}, {enemy_center[1]}, {round(np.rad2deg(enemy_angle), 1)}]",
                             (0, 50), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
