@@ -226,6 +226,10 @@ if __name__ == '__main__':
                 ball_dist = np.linalg.norm(center3 - robot_center)
                 ball_delta = center3 - robot_center
                 ball_angle = np.arctan2(ball_delta[1], ball_delta[0]) - robot_angle
+                if ball_angle > np.pi:
+                    ball_angle = ball_angle - 2*np.pi
+                elif ball_angle < -np.pi:
+                    ball_angle = ball_angle + 2*np.pi
                 cv2.putText(res, f"Ball: [{round(ball_dist)}, {round(np.rad2deg(ball_angle), 1)}]",
                             (0, 75), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
 
@@ -236,6 +240,10 @@ if __name__ == '__main__':
                 enemy_angle = np.arctan2(enemy_delta[1], enemy_delta[0])
                 to_enemy_delta = enemy_center - robot_center
                 to_enemy_angle = np.arctan2(to_enemy_delta[1], to_enemy_delta[0]) - robot_angle
+                if to_enemy_angle > np.pi:
+                    to_enemy_angle = to_enemy_angle - 2*np.pi
+                elif to_enemy_angle < -np.pi:
+                    to_enemy_angle = to_enemy_angle + 2*np.pi
                 cv2.circle(res, enemy_center, 10, (255, 255, 255), 1)
                 cv2.putText(res,  f"Enemy: [{enemy_center[0]}, {enemy_center[1]}, {round(np.rad2deg(enemy_angle), 1)}]",
                             (0, 50), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)
