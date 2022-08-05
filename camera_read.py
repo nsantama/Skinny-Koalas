@@ -4,7 +4,7 @@ import numpy as np
 import os
 from brain import Brain
 import parameters as p
-from strategy import main as strategy_main
+from strategy import strategy_main
 
 running = True
 auto = True

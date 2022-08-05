@@ -1,6 +1,3 @@
-## Estrategia
-
-##### Librerías #####
 from sympy import Point, Line, Polygon
 import numpy as np
 import parameters as p
@@ -11,42 +8,36 @@ import math
 # Coordenadas frente robot
 x_front_r = 0
 y_front_r = 0
-
 # Coordenadas trasero (centro) robot
 x_center_r = 0
 y_center_r = 0
-
 # Coordenadas frente enemigo
 x_front_e = 0
 y_front_e = 0
-
 # Coordenadas trasero (centro) enemigo
 x_center_e = 0
 y_center_e = 0
-
-
 # Coordenadas arco
 x_arco = 0
 y_arco = 0
-
 # Ángulo calculado en procesamiento de imágenes (radianes)
 ang_robot = 0  # del robot c/r marco referencia
-ang_ball = 0  # de la pelota c/r a robot. Esto viene del proc de img
-ang_enemigo = 0 # angulo del enemigo con referencia
-objetivo = 0 # posicion del objetivo (no necesariamnet es lo que se le evía al robot)
+ang_enemigo = 0  # angulo del enemigo con referencia
 pos_ball = 0  # posición pelota (sale del procesamiento de imágenes)
-pos_arco = 0 # Posicion arco (se saca de los parametros)
-objetivo = pos_ball # Por default, el objetivo es la pelota
+ang_ball = 0  # de la pelota c/r a robot. Esto viene del proc de img
+pos_arco = 0  # Posicion arco (se saca de los parametros)
+objetivo = 0  # posicion del objetivo (no necesariamnet es lo que se le evía al robot)
+objetivo = pos_ball  # Por default, el objetivo es la pelota
+
 
 ##### Funciones: Hay que retornar la posición y el ERROR del ángulo #####
 
-def main(robot_pos_F, robot_pos_C, robot_ang,
+def strategy_main(robot_pos_F, robot_pos_C, robot_ang,
          enemy_pos_F, enemy_pos_C, enemy_ang,
          ball_pos, ball_ang):
     global x_front_r, y_front_r, x_center_r, y_center_r, ang_robot
     global x_front_e, y_front_e, x_center_e, y_center_e, ang_enemigo
     global pos_ball, ang_ball
-    global objetivo
     x_front_r, y_front_r = robot_pos_F
     x_center_r, y_center_r = robot_pos_C
     ang_robot = robot_ang
@@ -55,12 +46,11 @@ def main(robot_pos_F, robot_pos_C, robot_ang,
     ang_enemigo = enemy_ang
     pos_ball = ball_pos
     ang_ball = ball_ang
-    
     # if atascado(): # Si lleva un rato sin moverse (atascado) que retroceda
-    #     pos_enviar, ang_enviar = desatascar()
-    #else: # Si no está atascado
-    objetivo = set_objetivo() # Se define el punto objetivo
-    area = zona_objetivo(objetivo) # Ve en qué ubicación se encuentra el objetivo
+        # pos_enviar, ang_enviar = desatascar()
+    # else: # Si no está atascado
+    objetivo = set_objetivo()  # Se define el punto objetivo
+    area = zona_objetivo(objetivo)  # Ve en qué ubicación se encuentra el objetivo
     if area == "fuera":
         pos_enviar, ang_enviar = rotar(objetivo)
     elif area == "visión":
@@ -68,21 +58,37 @@ def main(robot_pos_F, robot_pos_C, robot_ang,
     elif area == "ataque":
         pos_enviar, ang_enviar = avanzar(objetivo)
     return pos_enviar, ang_enviar
-    
+
 # Ver en qué área del robot se encuentra el objetivo, para decidir la  
 def zona_objetivo(objetivo):
-    pass
+    global ang_ball, x_center_r, y_center_r, ang_robot
+    if ang_ball > np.pi/12 or ang_ball < -np.pi/12:
+        return "fuera"
+    else:
+        c_adelante = y_center_r + p.DIST_ADEL_A * p.DATO
+        c_lado_izq = x_center_r - p.DIST_LAR_A * p.DATO
+        c_lado_der = x_center_r + p.DIST_LAR_A * p.DATO
+        c_maximo = y_center_r + p.LARGO_CANCHA_P * p.DATO
+        e_c = (x_center_r, y_center_r) # Centro de masa robot
+        i1 = Point(rotate(e_c, (c_lado_izq, c_adelante), ang_robot))
+        s1 = Point(rotate(e_c, (c_lado_izq, c_maximo), ang_robot))
+        i2 = Point(rotate(e_c, (c_lado_der, c_adelante), ang_robot))
+        s2 = Point(rotate(e_c, (c_lado_der, c_maximo), ang_robot))
+        p1, p2, p3, p4 = [(s1), (s2), (i1), (i2)]
+        area_ataque = Polygon(p1, p2, p3, p4)
+        if area_ataque.contains(objetivo):
+            return "ataque"
+        else:
+            return "visión"
 
 # Rotar un punto en base a un origen y un álgulo
 def rotate(origin, point, angle):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
-
     The angle should be given in radians.
     """
     ox, oy = origin
     px, py = point
-
     qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
     qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
     return qx, qy
