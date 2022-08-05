@@ -54,8 +54,10 @@ class ControlPos:
         self.control_ang = max(self.control_ang_min, self.control_ang)
         self.control_ang = min(self.control_ang, self.control_ang_max)
 
-        vel_R = (self.control_dist*int(abs(self.error_dist) > self.margen_dist) + (self.control_ang*p.RADIO_ROBOT)*int(abs(self.error_ang) > self.margen_ang)) / p.RADIO_RUEDA
-        vel_L = (self.control_dist*int(abs(self.error_dist) > self.margen_dist) - (self.control_ang*p.RADIO_ROBOT)*int(abs(self.error_ang) > self.margen_ang)) / p.RADIO_RUEDA
+        move_ang = int(abs(self.error_ang) > self.margen_ang)
+        move_pos = 1#int(abs(self.error_dist) > self.margen_dist)
+        vel_R = (self.control_dist*move_pos*(1-move_ang) + (self.control_ang*p.RADIO_ROBOT)*move_ang) / p.RADIO_RUEDA
+        vel_L = (self.control_dist*move_pos*(1-move_ang) - (self.control_ang*p.RADIO_ROBOT)*move_ang) / p.RADIO_RUEDA
         #print((abs(self.error_ang) > self.margen_ang), self.error_ang, self.margen_ang)
         return -int(vel_R), -int(vel_L)
 
