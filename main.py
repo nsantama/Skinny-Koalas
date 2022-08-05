@@ -23,7 +23,7 @@ class Brain:
             self.controlpos.error_dist = np.linalg.norm(camera.robot_center - self.controlpos.posRef)
             self.controlpos.error_ang__ = self.controlpos.error_ang_
             self.controlpos.error_ang_ = self.controlpos.error_ang
-            self.controlpos.error_ang = camera.robot_angle - self.controlpos.angRef
+            self.controlpos.error_ang = self.controlpos.angRef
             x, y = self.controlpos.get_control()
             self.msg = f"{int(x)},{int(y)};"
         self.msg = "0,0;"
