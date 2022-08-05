@@ -125,7 +125,7 @@ void velocidad(double dt) {
 
 void loop() {
   t_ = t;
-  delay(10);
+  delay(4);
   t = micros();
   if (t - at__ > 10000) {
     pD_ = pD;
@@ -163,8 +163,8 @@ void loop() {
   motor.setM2Speed(int(outD));
   motor.setM1Speed(int(outI));
 
+  String mensaje = readBuff(); // O es este delay??
   if (t - t__ > 100000) {
-    String mensaje = readBuff();
     t__ = t;
     // mensaje = processmsg(mensaje);
     if (newMsg){
@@ -180,7 +180,10 @@ void loop() {
       }
       else
       {
+        Serial.println("No hay mensaje");
         Serial.println(mensaje);
+        rD = 0;
+        rI = 0;
       }
       newMsg = false;
     }
@@ -225,7 +228,7 @@ String readBuff() {
       buffArray += buff; //Si no, agrego el byte a mi string para construir el mensaje
       //i += 1;
     }
-    delay(10);
+    //delay(10); // Ver si este delay afecta las instrucciones del robot
   }
 
   return buffArray;  //Retorno el mensaje
