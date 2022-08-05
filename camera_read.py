@@ -159,7 +159,7 @@ class Brain:
             print(f"Enviando {self.msg}")
             msgEncode = str.encode(self.msg)
             ser.write(msgEncode)
-            time.sleep(0.5)
+            #time.sleep(0.5)
         # Cerramos el puerto serial abierto una vez terminado el codigo
         ser.close()
 
