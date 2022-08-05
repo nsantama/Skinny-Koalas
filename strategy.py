@@ -33,8 +33,8 @@ objetivo = pos_ball  # Por default, el objetivo es la pelota
 ##### Funciones: Hay que retornar la posición y el ERROR del ángulo #####
 
 def strategy_main(robot_pos_F, robot_pos_C, robot_ang,
-         enemy_pos_F, enemy_pos_C, enemy_ang,
-         ball_pos, ball_ang):
+                  enemy_pos_F, enemy_pos_C, enemy_ang,
+                  ball_pos, ball_ang):
     global x_front_r, y_front_r, x_center_r, y_center_r, ang_robot
     global x_front_e, y_front_e, x_center_e, y_center_e, ang_enemigo
     global pos_ball, ang_ball
@@ -193,9 +193,9 @@ def bloqueado(objetivo):
     else:
         return True
 
+# Si la pelota esta en area, devuelve true
 def en_dominio():
     global pos_ball, x_center_r, y_center_r, ang_robot
-    # Si la pelota esta en area, devuelve true
     pelota = Point(*pos_ball)
     c_adelante = y_center_r + p.DIST_ADEL_A * p.DATO
     c_lado_izq = x_center_r - p.DIST_LAR_A * p.DATO
