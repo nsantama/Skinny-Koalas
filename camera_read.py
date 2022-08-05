@@ -234,7 +234,8 @@ if __name__ == '__main__':
                 enemy_center = np.array((0.5 * (center4 + center5)).astype(int))
                 enemy_delta = center4 - center5
                 enemy_angle = np.arctan2(enemy_delta[1], enemy_delta[0])
-                angle2enemy = enemy_angle - robot_angle
+                to_enemy_delta = enemy_center - robot_center
+                to_enemy_angle = np.arctan2(to_enemy_delta[1], to_enemy_delta[0]) - robot_angle
                 cv2.circle(res, enemy_center, 10, (255, 255, 255), 1)
                 cv2.putText(res,  f"Enemy: [{enemy_center[0]}, {enemy_center[1]}, {round(np.rad2deg(enemy_angle), 1)}]",
                             (0, 50), p.TEXT_FONT, p.TEXT_SCALE, p.TEXT_COLOR, p.TEXT_THICK)

@@ -5,8 +5,8 @@ import cv2
 
 SERIAL_PORT = "COM8"
 PIX_2_M = 1.0
-RADIO_ROBOT = 0.08
-RADIO_RUEDA = 0.08
+RADIO_ROBOT = 0.2 / 2
+RADIO_RUEDA = 0.09 / 2
 
 
 # Datos del robot
